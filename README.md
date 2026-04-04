@@ -1,6 +1,6 @@
 
 # NetWork with IP Phone 
-
+```bash
 
   # Switch1
   enable
@@ -198,6 +198,7 @@ switchport voice vlan 1
 exit
 
 
+```
 
 
 # screenshot
