@@ -1,5 +1,393 @@
 # test 
 
+# script
+
+
+```bash
+
+
+---------------------------------------switchN1
+
+enable
+
+configure terminal
+
+
+
+interface range fastEthernet 0/1-10
+
+switchport voice vlan 1
+
+exit
+
+
+
+-------------------------------------------------------------R1
+
+enable
+
+configure terminal
+
+interface fastEthernet 0/0
+
+ip address 192.168.1.1 255.255.255.0
+
+no shutdown
+
+ip dhcp pool LAN1
+
+network 192.168.1.0 255.255.255.0
+
+default-router 192.168.1.1
+
+dns-server 8.8.8.8
+
+option 150 ip 192.168.1.1
+
+exit
+
+interface fastEthernet 0/1
+
+ip address 193.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+ip route 194.168.1.0 255.255.255.0 193.168.1.2
+
+ip route 195.168.1.0 255.255.255.0 193.168.1.2
+
+ip route 196.168.1.0 255.255.255.0 193.168.1.2
+
+ip route 197.168.1.0 255.255.255.0 193.168.1.2
+
+telephony-service
+
+ip source-address 192.168.1.1 port 2000
+
+max-ephones 4
+
+max-dn 4
+
+auto assign 1 to 4
+
+
+
+ephone-dn 1
+
+number 1000
+
+ephone-dn 2
+
+number 1001
+
+ephone-dn 3
+
+number 1002
+
+ephone-dn 4
+
+number 1003
+
+
+
+! DIAL PEERS
+
+dial-peer voice 20 voip
+
+destination-pattern 2...
+
+session target ipv4:195.168.1.1
+
+
+
+dial-peer voice 30 voip
+
+destination-pattern 3...
+
+session target ipv4:197.168.1.1
+
+--------------------------------------------------------------------R2
+
+enable
+
+configure terminal
+
+interface fastEthernet 0/0
+
+ip address 194.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+interface fastEthernet 0/1
+
+ip address 193.168.1.2 255.255.255.0
+
+no shutdown
+
+exit
+
+
+
+ip route 192.168.1.0 255.255.255.0 193.168.1.1
+
+ip route 195.168.1.0 255.255.255.0 194.168.1.2
+
+ip route 196.168.1.0 255.255.255.0 194.168.1.2
+
+ip route 197.168.1.0 255.255.255.0 194.168.1.2
+
+------------------------------------------------------------------R3
+
+
+
+enable
+
+configure terminal
+
+interface fastEthernet 0/0
+
+ip address 195.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+interface fastEthernet 0/1
+
+ip address 194.168.1.2 255.255.255.0
+
+no shutdown
+
+
+
+ip dhcp pool LAN11
+
+network 195.168.1.0 255.255.255.0
+
+default-router 195.168.1.1
+
+dns-server 8.8.8.8
+
+option 150 ip 195.168.1.1
+
+exit
+
+ip route 193.168.1.0 255.255.255.0 194.168.1.1
+
+ip route 192.168.1.0 255.255.255.0 194.168.1.1
+
+ip route 196.168.1.0 255.255.255.0 195.168.1.2
+
+ip route 197.168.1.0 255.255.255.0 195.168.1.2
+
+
+
+
+
+telephony-service
+
+ip source-address 195.168.1.1 port 2000
+
+max-ephones 4
+
+max-dn 4
+
+auto assign 1 to 4
+
+
+
+ephone-dn 1
+
+number 2000
+
+ephone-dn 2
+
+number 2001
+
+ephone-dn 3
+
+number 2002
+
+ephone-dn 4
+
+number 2003
+
+
+
+! DIAL PEERS
+
+dial-peer voice 10 voip
+
+destination-pattern 1...
+
+session target ipv4:192.168.1.1
+
+
+
+dial-peer voice 30 voip
+
+destination-pattern 3...
+
+session target ipv4:197.168.1.1
+
+
+
+
+
+------------------------------------------------------------------R4
+
+
+
+enable
+
+configure terminal
+
+interface fastEthernet 0/0
+
+ip address 196.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+interface fastEthernet 0/1
+
+ip address 195.168.1.2 255.255.255.0
+
+no shutdown
+
+exit
+
+ip route 197.168.1.0 255.255.255.0 196.168.1.2
+
+ip route 194.168.1.0 255.255.255.0 195.168.1.1
+
+ip route 193.168.1.0 255.255.255.0 195.168.1.1
+
+ip route 192.168.1.0 255.255.255.0 195.168.1.1
+
+
+
+
+
+------------------------------------------------------------------R5
+
+
+
+enable
+
+configure terminal
+
+interface fastEthernet 0/0
+
+ip address 197.168.1.1 255.255.255.0
+
+no shutdown
+
+exit
+
+interface fastEthernet 0/1
+
+ip address 196.168.1.2 255.255.255.0
+
+no shutdown
+
+
+
+ip dhcp pool LAN112
+
+network 197.168.1.0 255.255.255.0
+
+default-router 197.168.1.1
+
+dns-server 8.8.8.8
+
+option 150 ip 197.168.1.1
+
+exit
+
+ip route 195.168.1.0 255.255.255.0 196.168.1.1
+
+ip route 194.168.1.0 255.255.255.0 196.168.1.1
+
+ip route 193.168.1.0 255.255.255.0 196.168.1.1
+
+ip route 192.168.1.0 255.255.255.0 196.168.1.1
+
+
+
+
+
+telephony-service
+
+ip source-address 197.168.1.1 port 2000
+
+max-ephones 4
+
+max-dn 4
+
+auto assign 1 to 4
+
+
+
+ephone-dn 1
+
+number 3000
+
+ephone-dn 2
+
+number 3001
+
+ephone-dn 3
+
+number 3002
+
+ephone-dn 4
+
+number 3003
+
+
+
+! DIAL PEERS
+
+dial-peer voice 10 voip
+
+destination-pattern 1...
+
+session target ipv4:192.168.1.1
+
+
+
+dial-peer voice 20 voip
+
+destination-pattern 2...
+
+session target ipv4:195.168.1.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
 
 # screenshot
 ![khj](https://raw.githubusercontent.com/Bandar-Ameen/network/refs/heads/main/five/fiverouterss.PNG)
