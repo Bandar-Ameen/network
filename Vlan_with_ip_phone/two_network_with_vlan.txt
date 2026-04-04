@@ -1,0 +1,250 @@
+----------------------------------------------R1
+enable
+configure terminal
+
+hostname R1
+
+! ---------------- INTERFACES ----------------
+interface FastEthernet0/1
+no shutdown
+
+interface FastEthernet0/1.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+
+interface FastEthernet0/1.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+
+! رابط بين الراوترين
+interface FastEthernet0/0
+ip address 10.0.0.1 255.255.255.0
+no shutdown
+
+! ---------------- DHCP ----------------
+ip dhcp pool VLAN10
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 8.8.8.8
+option 150 ip 192.168.10.1
+
+ip dhcp pool VLAN20
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.1
+dns-server 8.8.8.8
+option 150 ip 192.168.10.1
+
+! ---------------- ROUTING ----------------
+ip route 192.169.0.0 255.255.0.0 10.0.0.2
+
+! ---------------- TELEPHONY ----------------
+telephony-service
+ip source-address 192.168.10.1 port 2000
+max-ephones 10
+max-dn 10
+auto assign 1 to 10
+
+ephone-dn 1
+number 1000
+ephone-dn 2
+number 1001
+ephone-dn 3
+number 2000
+ephone-dn 4
+number 2001
+
+! ---------------- DIAL PEERS ----------------
+dial-peer voice 30 voip
+destination-pattern 3...
+session target ipv4:192.169.10.1
+
+dial-peer voice 40 voip
+destination-pattern 4...
+session target ipv4:192.169.20.1
+********************************************************************switch1
+enable
+configure terminal
+
+vlan 10
+name HR
+
+vlan 20
+name IT
+
+vlan 30
+name SALES
+
+
+vlan 40
+name test
+! الربط مع الراوتر (Trunk)
+interface GigabitEthernet0/1
+switchport mode trunk
+
+! كل منفذ VLAN مختلفة
+interface FastEthernet0/1
+switchport mode access
+switchport access vlan 10
+
+interface FastEthernet0/2
+switchport mode access
+switchport access vlan 20
+
+interface FastEthernet0/3
+switchport mode access
+switchport access vlan 30
+
+
+
+
+interface FastEthernet0/4
+switchport mode access
+switchport access vlan 40
+end
+write
+**********************************************Switch Vlan1
+enable
+configure terminal
+
+interface range fastEthernet 0/1-10
+switchport voice vlan 1
+exit
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Router2
+
+enable
+configure terminal
+
+hostname R2
+
+! ---------------- INTERFACES ----------------
+interface FastEthernet0/1
+no shutdown
+
+interface FastEthernet0/1.10
+encapsulation dot1Q 10
+ip address 192.169.10.1 255.255.255.0
+
+interface FastEthernet0/1.20
+encapsulation dot1Q 20
+ip address 192.169.20.1 255.255.255.0
+
+! رابط بين الراوترين
+interface FastEthernet0/0
+ip address 10.0.0.2 255.255.255.0
+no shutdown
+
+! ---------------- DHCP ----------------
+ip dhcp pool VLAN10
+network 192.169.10.0 255.255.255.0
+default-router 192.169.10.1
+dns-server 8.8.8.8
+option 150 ip 192.169.10.1
+
+ip dhcp pool VLAN20
+network 192.169.20.0 255.255.255.0
+default-router 192.169.20.1
+dns-server 8.8.8.8
+option 150 ip 192.169.10.1
+
+! ---------------- ROUTING ----------------
+ip route 192.168.0.0 255.255.0.0 10.0.0.1
+
+! ---------------- TELEPHONY ----------------
+telephony-service
+ip source-address 192.169.10.1 port 2000
+max-ephones 10
+max-dn 10
+auto assign 1 to 10
+
+ephone-dn 1
+number 3000
+ephone-dn 2
+number 3001
+ephone-dn 3
+number 4000
+ephone-dn 4
+number 4001
+
+! ---------------- DIAL PEERS ----------------
+dial-peer voice 10 voip
+destination-pattern 1...
+session target ipv4:192.168.10.1
+
+dial-peer voice 20 voip
+destination-pattern 2...
+session target ipv4:192.168.20.1
+
+
+*******************************************************************switch2
+enable
+configure terminal
+
+vlan 10
+name HR
+
+vlan 20
+name IT
+
+vlan 30
+name SALES
+
+
+vlan 40
+name test
+! الربط مع الراوتر (Trunk)
+interface GigabitEthernet0/1
+switchport mode trunk
+
+! كل منفذ VLAN مختلفة
+interface FastEthernet0/1
+switchport mode access
+switchport access vlan 10
+
+interface FastEthernet0/2
+switchport mode access
+switchport access vlan 20
+
+interface FastEthernet0/3
+switchport mode access
+switchport access vlan 30
+
+
+
+
+interface FastEthernet0/4
+switchport mode access
+switchport access vlan 40
+end
+write
+
+
+*******************************switch2vlan
+
+enable
+configure terminal
+
+interface range fastEthernet 0/1-10
+switchport voice vlan 1
+exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
